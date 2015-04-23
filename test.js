@@ -8,7 +8,7 @@ function pInstallerTest() {
 	//happy path
 	var happyTest = [ "KittenService: ", "Leetmeme: Cyberportal", "Cyberportal: Ice", "CamelCaser: KittenService", "Fraudstream: Leetmeme", "Ice: " ];
 	var happy = pInstaller(happyTest);	
-	var expected = ['Cyberportal','Ice','KittenService','Leetmeme','CamelCaser','Fraudstream' ]
+	var expected = ['KittenService','Leetmeme','Cyberportal','Ice','CamelCaser','Fraudstream' ];
 	if(happy.length !== expected.length)
 		return console.log(false);
 	for(var i = happy.length; i--;){
@@ -21,6 +21,7 @@ function pInstallerTest() {
 	var sadTest = [ "KittenService: ", "Leetmeme: Cyberportal", "Cyberportal: Ice", "CamelCaser: KittenService", "Fraudstream: ", "Ice: Leetmeme", ];
 	try {
 		var sad = pInstaller(sadTest)
+console.log(sad);
 	} catch(e) {
 		console.log(e.message);
 	}
