@@ -1,3 +1,10 @@
-var vows = require('vows'), 
-	pinstall = require('./index'), 
-	assert = require('assert')
+/**
+ * Function for testing
+ **/
+function pInstallTest() {
+	//happy path
+
+	//sad path
+
+	//error path(?)
+}
