@@ -13,7 +13,7 @@ exports.array = pInstaller
 function pInstaller(items, packages) {
   var items = items[0];
   var dependencies = items[1];
-  return console.log(items[0] + " AND " + items[1]  + " AND " + packages);
+  return console.log(items + " AND " + dependencies  + " AND " + packages);
 }
 //helper function to parse array and 
 function parsedItems(arr){

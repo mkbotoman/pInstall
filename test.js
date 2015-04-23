@@ -14,7 +14,7 @@ function pInstallerTest() {
 
 	//error path(?)
 
-	return console.log(sorted);
+	return sorted;
 }
 
 pInstallerTest();
