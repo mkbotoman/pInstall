@@ -39,7 +39,6 @@ function pInstaller(items, packages) {
       installMe.push(helper[t]);
     }
   }
-console.log(installMe);
   return installMe;
 }
 //helper function to parse array and output two equal length arrays
