@@ -1,0 +1,11 @@
+{
+  "name": "packageInstaller",
+  "author": "Maureen",
+  "repo": "mkbotoman/pinstaller",
+  "dependencies": {},
+  "development": {},
+  "license": "MIT",
+  "scripts": [
+    "index.js"
+  ]
+}
