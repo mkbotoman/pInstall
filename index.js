@@ -11,9 +11,9 @@ module.exports = exports = function(packages){
 exports.array = pInstaller
 
 function pInstaller(items, packages) {
-  var items = items[0];
+  var dependants = items[0];
   var dependencies = items[1];
-  return console.log(items + " AND " + dependencies  + " AND " + packages);
+  return console.log(dependants + " AND " + dependencies  + " AND " + packages);
 }
 //helper function to parse array and 
 function parsedItems(arr){
@@ -24,9 +24,11 @@ function parsedItems(arr){
   		var combine = arr[l];
   		var split = combine.split(": ");
   		items.push(split[0]);
+  console.log(split[1])
   		if(split[1])
   			dependencies.push(split[1])
-	}
+	 }
+console.log(dependencies);
 	return [items, dependencies];
 }
 
