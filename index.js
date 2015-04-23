@@ -37,6 +37,9 @@ function pInstaller(items, packages) {
   for (t = 0; t < helper.length; t++) {
     if (installMe.indexOf(helper[t]) === -1) {
       installMe.push(helper[t]);
+    } else {
+      console.log("circular dependency")
+      return;
     }
   }
   return installMe;
