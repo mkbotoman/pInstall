@@ -8,9 +8,14 @@ function pInstallerTest() {
 	//happy path
 	var happyTest = [ "KittenService: ", "Leetmeme: Cyberportal", "Cyberportal: Ice", "CamelCaser: KittenService", "Fraudstream: Leetmeme", "Ice: " ];
 	var sorted = pInstaller(happyTest);	
-console.log(sorted);
 	var expected = ['Cyberportal','Ice','KittenService','Leetmeme','CamelCaser','Fraudstream' ]
-	console.log(expected === sorted);
+	if(sorted.length !== expected.length)
+		return console.log(false);
+	for(var i = sorted.length; i--;){
+		if(sorted[i] !== expected[i])
+			return console.log(false);
+	}
+	return console.log(true);
 
 	//sad path
 	var sadTest = [ "KittenService: ", "Leetmeme: Cyberportal", "Cyberportal: Ice", "CamelCaser: KittenService", "Fraudstream: ", "Ice: Leetmeme", ];
