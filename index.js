@@ -10,9 +10,10 @@ module.exports = exports = function(packages) {
 
 exports.array = pInstaller
 function pInstaller(edges) {
-  var nodes   = {}, // hash: stringified id of the node => { id: id, afters: lisf of ids }
-      sorted  = [], // sorted list of IDs ( returned value )
-      visited = {}; // hash: id of already visited node => true
+  var nodes   = {}, 
+      sorted  = [], 
+      visited = {},
+      finished = []; 
  
   var Node = function(id) {
     this.id = id;
@@ -40,17 +41,16 @@ function pInstaller(edges) {
     ancestors.push(id);
  
     visited[idstr] = true;
- console.log(node)
     node.afters.forEach(function(afterID) {
-      if (!afterID || ancestors.indexOf(afterID) >= 0)  // if already in ancestors, a closed chain exists.
+      if (ancestors.indexOf(afterID) >= 0)  // if already in ancestors, a closed chain exists.
         throw new Error('closed chain : ' +  afterID + ' is in ' + id);
  
       visit(afterID.toString(), ancestors.map(function(v) { return v })); // recursive call
     });
- 
-    sorted.unshift(id);
+    if (id != 'none') 
+      sorted.push(id);
   });
- 
+
   return sorted;
 }
 //helper function to parse array and output two equal length arrays
@@ -64,7 +64,7 @@ function parsedItems(arr){
 		if(split[1]) {
 			items.push([split[0], split[1]]);
     } else {
-      items.push([split[0], []]);
+      items.push([split[0], 'none']);
     }
   }
 	return items;
