@@ -9,10 +9,11 @@ module.exports = exports = function(packages) {
 }
 
 exports.array = pInstaller
-function pInstaller(edges) {
-  var nodes   = {}, 
+
+function pInstaller(packages) {
+  var groups   = {}, 
       sorted  = [], 
-      visited = {},
+      done = {},
       finished = []; 
  
   var Node = function(id) {
@@ -21,29 +22,29 @@ function pInstaller(edges) {
   }
  
   // 1. build data structures
-  edges.forEach(function(v) {
+  packages.forEach(function(v) {
     var from = v[0], to = v[1];
-    if (!nodes[from]) nodes[from] = new Node(from);
-    if (!nodes[to]) nodes[to]     = new Node(to);
-    nodes[from].afters.push(to);
+    if (!groups[from]) groups[from] = new Node(from);
+    if (!groups[to]) groups[to]     = new Node(to);
+    groups[from].afters.push(to);
   });
  
   // 2. topological sort
-  Object.keys(nodes).forEach(function visit(idstr, ancestors) {
-    var node = nodes[idstr],
+  Object.keys(groups).forEach(function visit(idstr, ancestors) {
+    var node = groups[idstr],
         id   = node.id;
  
     // if already exists, do nothing
-    if (visited[idstr]) return;
+    if (done[idstr]) return;
  
     if (!Array.isArray(ancestors)) ancestors = [];
  
     ancestors.push(id);
  
-    visited[idstr] = true;
+    done[idstr] = true;
     node.afters.forEach(function(afterID) {
       if (ancestors.indexOf(afterID) >= 0)  // if already in ancestors, a closed chain exists.
-        throw new Error('closed chain : ' +  afterID + ' is in ' + id);
+        throw new Error('Cyclic dependency : ' +  afterID + ' is in ' + id);
  
       visit(afterID.toString(), ancestors.map(function(v) { return v })); // recursive call
     });
