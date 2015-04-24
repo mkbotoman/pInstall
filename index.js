@@ -21,7 +21,6 @@ function pInstaller(packages) {
     this.afters = [];
   }
  
-  // 1. build data structures
   packages.forEach(function(v) {
     var from = v[0], to = v[1];
     if (!groups[from]) groups[from] = new Node(from);
@@ -29,12 +28,10 @@ function pInstaller(packages) {
     groups[from].afters.push(to);
   });
  
-  // 2. topological sort
   Object.keys(groups).forEach(function visit(idstr, ancestors) {
     var node = groups[idstr],
         id   = node.id;
  
-    // if already exists, do nothing
     if (done[idstr]) return;
  
     if (!Array.isArray(ancestors)) ancestors = [];
@@ -46,10 +43,12 @@ function pInstaller(packages) {
       if (ancestors.indexOf(afterID) >= 0)  // if already in ancestors, a closed chain exists.
         throw new Error('Cyclic dependency : ' +  afterID + ' is in ' + id);
  
-      visit(afterID.toString(), ancestors.map(function(v) { return v })); // recursive call
+      visit(afterID.toString(), ancestors.map(function(v) { return v }));
     });
+
     if (id != 'none') 
       sorted.push(id);
+    
   });
   for ( t = 0; t < sorted.length; t++ ) {
     console.log('Installing ' + sorted[t] + '...')
