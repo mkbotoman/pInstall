@@ -5,44 +5,53 @@
  * @returns {Array}
  */
 module.exports = exports = function(packages) {
-  return pInstaller(parsedItems(packages), packages)
+  return pInstaller(parsedItems(packages))
 }
 
 exports.array = pInstaller
-
-function pInstaller(items, packages) {
-  var dependants = items[0];
-  var dependencies = items[1];
-  var helper = [];
-  var installMe = [];
-
-  for ( i = 0; i < packages.length; i++ ) {
-    var parsed = packages[i].split(": ");
-    //check for circular dependency
-    // if (parsed[1] && ) {
-    //   throw New Error("Packages contain a circular dependency!");
-    //   return;
-    // }
-
-    //if the dependent is not a dependency or already in the helper, add it to the helper
-    if (helper.indexOf(parsed[0]) === -1 && dependencies.indexOf(parsed[0]) === -1) {
-      helper.push(parsed[0]);
-    }
-    //if dependency is not already being installed
-    if (parsed[1] && installMe.indexOf(parsed[1]) === -1) {
-      installMe.push(parsed[1]);
-    }
+function pInstaller(edges) {
+  var nodes   = {}, // hash: stringified id of the node => { id: id, afters: lisf of ids }
+      sorted  = [], // sorted list of IDs ( returned value )
+      visited = {}; // hash: id of already visited node => true
+ 
+  var Node = function(id) {
+    this.id = id;
+    this.afters = [];
   }
-
-  for (t = 0; t < helper.length; t++) {
-    if (installMe.indexOf(helper[t]) === -1) {
-      installMe.push(helper[t]);
-    } else {
-      console.log("circular dependency")
-      return;
-    }
-  }
-  return installMe;
+ 
+  // 1. build data structures
+  edges.forEach(function(v) {
+    var from = v[0], to = v[1];
+    if (!nodes[from]) nodes[from] = new Node(from);
+    if (!nodes[to]) nodes[to]     = new Node(to);
+    nodes[from].afters.push(to);
+  });
+ 
+  // 2. topological sort
+  Object.keys(nodes).forEach(function visit(idstr, ancestors) {
+    var node = nodes[idstr],
+        id   = node.id;
+ 
+    // if already exists, do nothing
+    if (visited[idstr]) return;
+ 
+    if (!Array.isArray(ancestors)) ancestors = [];
+ 
+    ancestors.push(id);
+ 
+    visited[idstr] = true;
+ console.log(node)
+    node.afters.forEach(function(afterID) {
+      if (!afterID || ancestors.indexOf(afterID) >= 0)  // if already in ancestors, a closed chain exists.
+        throw new Error('closed chain : ' +  afterID + ' is in ' + id);
+ 
+      visit(afterID.toString(), ancestors.map(function(v) { return v })); // recursive call
+    });
+ 
+    sorted.unshift(id);
+  });
+ 
+  return sorted;
 }
 //helper function to parse array and output two equal length arrays
 function parsedItems(arr){
@@ -52,13 +61,12 @@ function parsedItems(arr){
   	for ( l = 0; l < arr.length; l++ ) {
   		var combine = arr[l];
   		var split = combine.split(": ");
-
-  		items.push(split[0]);
-
-  		if(split[1]) {
-  			dependencies.push(split[1]);
-      }
-	 }
-	return [items, dependencies];
+		if(split[1]) {
+			items.push([split[0], split[1]]);
+    } else {
+      items.push([split[0], []]);
+    }
+  }
+	return items;
 }
 
