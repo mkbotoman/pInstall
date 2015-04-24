@@ -5,6 +5,7 @@
 var pInstaller = require('./index');
 
 function pInstallerTest() {
+console.log('starting tests')
 	//happy path
 	var happyTest = [ "KittenService: ", "Leetmeme: Cyberportal", "Cyberportal: Ice", "CamelCaser: KittenService", "Fraudstream: Leetmeme", "Ice: " ];
 	var happy = pInstaller(happyTest);	

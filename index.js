@@ -50,7 +50,9 @@ function pInstaller(edges) {
     if (id != 'none') 
       sorted.push(id);
   });
-
+  for ( t = 0; t < sorted.length; t++ ) {
+    console.log('Installing ' + sorted[t] + '...')
+  }
   return sorted;
 }
 //helper function to parse array and output two equal length arrays
